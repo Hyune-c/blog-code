@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -31,13 +32,17 @@ class MemberControllerTest {
   private ObjectMapper objectMapper;
 
   @Autowired
+  private PasswordEncoder passwordEncoder;
+
+  @Autowired
   private MemberRepository memberRepository;
 
   @DisplayName("[성공] 회원 가입")
   @Test
   public void success_create() throws Exception {
     // given
-    CreateMemberRequest request = new CreateMemberRequest("hyune@gmail.com", "1q2w3e4r*");
+    String password = "1q2w3e4r*";
+    CreateMemberRequest request = new CreateMemberRequest("hyune@gmail.com", password);
 
     // when
     MvcResult mvcResult = mockMvc.perform(post("/api/v1/members")
@@ -52,6 +57,8 @@ class MemberControllerTest {
     assertThat(memberRepository.existsById(memberId)).isTrue();
 
     Member member = memberRepository.findById(memberId).get();
+    assertThat(passwordEncoder.matches(password, member.getPassword())).isTrue();
+
     System.out.println("### member.getId()=" + member.getId()
         + ", member.getEmail()=" + member.getEmail()
         + ", member.getPassword()=" + member.getPassword());

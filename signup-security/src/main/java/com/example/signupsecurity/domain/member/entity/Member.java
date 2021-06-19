@@ -1,5 +1,7 @@
 package com.example.signupsecurity.domain.member.entity;
 
+import com.example.signupsecurity.common.converter.PasswordEncryptConverter;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +19,8 @@ public class Member {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String email;
+
+  @Convert(converter = PasswordEncryptConverter.class)
   private String password;
 
   public Member(String email, String password) {
