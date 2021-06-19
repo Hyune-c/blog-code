@@ -2,6 +2,7 @@ package com.example.signupsecurity.web.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,6 +41,8 @@ class LoginControllerTest {
 
   @Autowired
   private MemberRepository memberRepository;
+
+  public static String jwt;
 
   @DisplayName("[web] 로그인")
   @TestFactory
@@ -85,7 +89,20 @@ class LoginControllerTest {
           // then
           String token = mvcResult.getResponse().getContentAsString();
           assertThat(token).isNotBlank();
+
+          jwt = token;
           System.out.println("### token=" + mvcResult.getResponse().getContentAsString());
+        }),
+        dynamicTest("[성공] jwt 로 내 정보 조회", () -> {
+          // given
+
+          // when
+          mockMvc.perform(get("/api/v1/my")
+              .header(HttpHeaders.AUTHORIZATION, "bearer " + jwt))
+              .andDo(print())
+              .andExpect(status().isOk());
+
+          // then
         })
     );
   }
