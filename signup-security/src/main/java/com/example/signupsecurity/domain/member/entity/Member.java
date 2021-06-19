@@ -1,6 +1,7 @@
 package com.example.signupsecurity.domain.member.entity;
 
 import com.example.signupsecurity.common.converter.PasswordEncryptConverter;
+import com.example.signupsecurity.common.token.Role;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,8 +24,11 @@ public class Member {
   @Convert(converter = PasswordEncryptConverter.class)
   private String password;
 
+  private String role;
+
   public Member(String email, String password) {
     this.email = email;
     this.password = password;
+    this.role = Role.MEMBER.getCode();
   }
 }
