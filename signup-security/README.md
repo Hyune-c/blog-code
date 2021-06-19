@@ -18,3 +18,7 @@
 
 - 로그인 구현
 - JWT 반환 구현
+
+## Step 4
+
+- Custom Annotation 을 통한 JWT 해석 구현
