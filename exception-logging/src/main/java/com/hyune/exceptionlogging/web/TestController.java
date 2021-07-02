@@ -14,6 +14,6 @@ public class TestController {
         System.out.println("system out");
         log.info("### log info");
         log.info("### MDC transactionId={}", MDC.get("transactionId"));
-        throw new RuntimeException("test!! " + MDC.get("transactionId"));
+        throw new RuntimeException("test!!");
     }
 }

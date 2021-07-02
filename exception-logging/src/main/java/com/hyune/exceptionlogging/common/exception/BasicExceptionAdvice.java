@@ -27,7 +27,8 @@ public class BasicExceptionAdvice extends BaseExceptionAdvice {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     protected ErrorResponse handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
-        return ErrorResponse.of(METHOD_NOT_ALLOWED, generateLogId(ex));
+        preHandle(ex);
+        return ErrorResponse.of(METHOD_NOT_ALLOWED);
     }
 
     /**
@@ -39,7 +40,8 @@ public class BasicExceptionAdvice extends BaseExceptionAdvice {
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ErrorResponse handleBindException(BindException ex) {
-        return ErrorResponse.of(BAD_REQUEST, ex.getBindingResult(), generateLogId(ex));
+        preHandle(ex);
+        return ErrorResponse.of(BAD_REQUEST, ex.getBindingResult());
     }
 
     /**
@@ -50,9 +52,9 @@ public class BasicExceptionAdvice extends BaseExceptionAdvice {
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ErrorResponse handleMissingServletRequestParameterException(
-        MissingServletRequestParameterException ex) {
-        return ErrorResponse.of(ex, generateLogId(ex));
+    protected ErrorResponse handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
+        preHandle(ex);
+        return ErrorResponse.of(ex);
     }
 
     /**
@@ -64,9 +66,9 @@ public class BasicExceptionAdvice extends BaseExceptionAdvice {
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ErrorResponse handleMethodArgumentTypeMismatchException(
-        MethodArgumentTypeMismatchException ex) {
-        return ErrorResponse.of(ex, generateLogId(ex));
+    protected ErrorResponse handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        preHandle(ex);
+        return ErrorResponse.of(ex);
     }
 
     /**
@@ -78,15 +80,16 @@ public class BasicExceptionAdvice extends BaseExceptionAdvice {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ErrorResponse handleConstraintViolationException(
-        ConstraintViolationException ex) {
-        return ErrorResponse.of(ex, generateLogId(ex));
+    protected ErrorResponse handleConstraintViolationException(ConstraintViolationException ex) {
+        preHandle(ex);
+        return ErrorResponse.of(ex);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ErrorResponse handleIllegalArgumentException(IllegalArgumentException ex) {
-        return ErrorResponse.of(BAD_REQUEST, generateLogId(ex));
+        preHandle(ex);
+        return ErrorResponse.of(BAD_REQUEST);
     }
 
     /**
@@ -99,14 +102,15 @@ public class BasicExceptionAdvice extends BaseExceptionAdvice {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ErrorResponse handleMethodArgumentNotValidException(
-        MethodArgumentNotValidException ex) {
-        return ErrorResponse.of(BAD_REQUEST, ex.getBindingResult(), generateLogId(ex));
+    protected ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        preHandle(ex);
+        return ErrorResponse.of(BAD_REQUEST, ex.getBindingResult());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected ErrorResponse handleException(Exception ex) {
-        return ErrorResponse.of(UNKNOWN, generateLogId(ex));
+        preHandle(ex);
+        return ErrorResponse.of(UNKNOWN);
     }
 }

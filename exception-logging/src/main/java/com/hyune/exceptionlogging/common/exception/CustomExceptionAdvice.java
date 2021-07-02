@@ -11,13 +11,13 @@ public class CustomExceptionAdvice extends BaseExceptionAdvice {
 
     @ExceptionHandler(PaymentException.class)
     protected ResponseEntity<ErrorResponse> handlePaymentException(PaymentException ex) {
-        return new ResponseEntity<>(ErrorResponse.of(ex, generateLogId(ex)),
-            ex.getErrorCode().getStatus());
+        preHandle(ex);
+        return new ResponseEntity<>(ErrorResponse.of(ex), ex.getErrorCode().getStatus());
     }
 
     @ExceptionHandler(BusinessException.class)
     protected ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
-        return new ResponseEntity<>(ErrorResponse.of(ex, generateLogId(ex)),
-            ex.getErrorCode().getStatus());
+        preHandle(ex);
+        return new ResponseEntity<>(ErrorResponse.of(ex), ex.getErrorCode().getStatus());
     }
 }

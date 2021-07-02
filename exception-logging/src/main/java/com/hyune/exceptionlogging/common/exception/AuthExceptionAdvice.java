@@ -22,7 +22,8 @@ public class AuthExceptionAdvice extends BaseExceptionAdvice {
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     protected ErrorResponse handleAuthenticationException(AuthenticationException ex) {
-        return ErrorResponse.of(UNAUTHORIZED, generateLogId(ex));
+        preHandle(ex);
+        return ErrorResponse.of(UNAUTHORIZED);
     }
 
     /**
@@ -34,6 +35,7 @@ public class AuthExceptionAdvice extends BaseExceptionAdvice {
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     protected ErrorResponse handleAccessDeniedException(AccessDeniedException ex) {
-        return ErrorResponse.of(FORBIDDEN, generateLogId(ex));
+        preHandle(ex);
+        return ErrorResponse.of(FORBIDDEN);
     }
 }
