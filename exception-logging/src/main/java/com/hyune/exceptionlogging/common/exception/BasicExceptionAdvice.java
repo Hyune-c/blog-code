@@ -1,20 +1,11 @@
 package com.hyune.exceptionlogging.common.exception;
 
 import static com.hyune.exceptionlogging.common.exception.ErrorCode.BAD_REQUEST;
-import static com.hyune.exceptionlogging.common.exception.ErrorCode.FORBIDDEN;
 import static com.hyune.exceptionlogging.common.exception.ErrorCode.METHOD_NOT_ALLOWED;
-import static com.hyune.exceptionlogging.common.exception.ErrorCode.UNAUTHORIZED;
 import static com.hyune.exceptionlogging.common.exception.ErrorCode.UNKNOWN;
 
-import com.hyune.exceptionlogging.common.exception.custom.BusinessException;
-import com.hyune.exceptionlogging.common.exception.custom.PaymentException;
-import java.nio.file.AccessDeniedException;
-import java.util.UUID;
-import javax.security.sasl.AuthenticationException;
 import javax.validation.ConstraintViolationException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,21 +15,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-@Slf4j
 @RestControllerAdvice
-public class ExceptionAdvice {
-
-    /**
-     * UUID 를 통해 서버 로그를 쉽게 검색합니다.
-     *
-     * @param ex
-     * @return
-     */
-    private UUID generateLogId(Exception ex) {
-        UUID uuid = UUID.randomUUID();
-        log.error("### {}, {}", uuid, ex.getClass().getSimpleName(), ex);
-        return uuid;
-    }
+public class BasicExceptionAdvice extends BaseExceptionAdvice {
 
     /**
      * 지원하지 않은 HTTP method 호출 할 경우 발생합니다.
@@ -62,18 +40,6 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ErrorResponse handleBindException(BindException ex) {
         return ErrorResponse.of(BAD_REQUEST, ex.getBindingResult(), generateLogId(ex));
-    }
-
-    /**
-     * Authentication 객체가 필요한 권한을 보유하지 않은 경우 발생합니다.
-     *
-     * @param ex
-     * @return
-     */
-    @ExceptionHandler(AuthenticationException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    protected ErrorResponse handleAuthenticationException(AuthenticationException ex) {
-        return ErrorResponse.of(UNAUTHORIZED, generateLogId(ex));
     }
 
     /**
@@ -136,37 +102,6 @@ public class ExceptionAdvice {
     protected ErrorResponse handleMethodArgumentNotValidException(
         MethodArgumentNotValidException ex) {
         return ErrorResponse.of(BAD_REQUEST, ex.getBindingResult(), generateLogId(ex));
-    }
-
-    /**
-     * Authentication 객체가 필요한 권한을 보유하지 않은 경우 발생합니다.
-     *
-     * @param ex
-     * @return
-     */
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    protected ErrorResponse handleAccessDeniedException(AccessDeniedException ex) {
-        return ErrorResponse.of(FORBIDDEN, generateLogId(ex));
-    }
-
-
-    /**
-     * 커스텀 익셉션은 필요에 맞게 수정합니다.
-     *
-     * @param ex
-     * @return
-     */
-    @ExceptionHandler(PaymentException.class)
-    protected ResponseEntity<ErrorResponse> handlePaymentException(PaymentException ex) {
-        return new ResponseEntity<>(ErrorResponse.of(ex, generateLogId(ex)),
-            ex.getErrorCode().getStatus());
-    }
-
-    @ExceptionHandler(BusinessException.class)
-    protected ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
-        return new ResponseEntity<>(ErrorResponse.of(ex, generateLogId(ex)),
-            ex.getErrorCode().getStatus());
     }
 
     @ExceptionHandler(Exception.class)
