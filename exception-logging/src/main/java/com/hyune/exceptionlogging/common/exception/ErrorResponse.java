@@ -25,15 +25,14 @@ public class ErrorResponse {
 
     private final String code;
     private final String message;
-    private final LocalDateTime time;
-    private final List<FieldError> errors;
+    private final LocalDateTime time = LocalDateTime.now();
     private final UUID logId;
+    private final List<FieldError> errors;
 
     public static ErrorResponse of(ErrorCode errorCode, BindingResult bindingResult, UUID logId) {
         return ErrorResponse.builder()
             .code(errorCode.name())
             .message(errorCode.getReason())
-            .time(LocalDateTime.now())
             .errors(FieldError.of(bindingResult))
             .logId(logId)
             .build();
@@ -43,7 +42,6 @@ public class ErrorResponse {
         return ErrorResponse.builder()
             .code(errorCode.name())
             .message(errorCode.getReason())
-            .time(LocalDateTime.now())
             .errors(errors)
             .logId(logId)
             .build();
@@ -53,7 +51,6 @@ public class ErrorResponse {
         return ErrorResponse.builder()
             .code(errorCode.name())
             .message(errorCode.getReason())
-            .time(LocalDateTime.now())
             .errors(new ArrayList<>())
             .logId(logId)
             .build();
