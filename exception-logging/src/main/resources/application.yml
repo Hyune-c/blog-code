@@ -1,0 +1,26 @@
+spring:
+  h2:
+    console:
+      enabled: true
+  config:
+    activate:
+      on-profile: test
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+logging:
+  pattern:
+    console: '%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} [%mdc{transactionId:--}] %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}'
+  level:
+    root: debug
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+
+server:
+  servlet:
+    encoding:
+      charset: utf-8
+      force: true
