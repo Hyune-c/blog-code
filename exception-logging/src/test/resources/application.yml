@@ -1,0 +1,13 @@
+spring:
+  h2:
+    console:
+      enabled: true
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
+server:
+  servlet:
+    encoding:
+      charset: utf-8
+      force: true
